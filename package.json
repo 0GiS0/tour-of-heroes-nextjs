@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tailwindcss/forms": "^0.5.10",
     "next": "15.2.1",
     "postgres": "^3.4.5",
     "react": "^19.0.0",

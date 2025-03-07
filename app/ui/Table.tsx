@@ -7,6 +7,8 @@ import Link from "next/link";
 export default async function HeroesTable() {
     const heroes = await getHeroes();
 
+    console.log("Heroes: ", heroes);
+
     return (
         <div className="mt-6 flow-root">
             <div className="inline-block min-w-full align-middle">
@@ -34,7 +36,7 @@ export default async function HeroesTable() {
                                     <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900">
                                         <div className="flex items-center">
                                             <div className="h-10 w-10 flex-shrink-0">
-                                                <Image className="h-10 w-10 rounded-full" src={hero.imageurl} alt="" width={40} height={40} />
+                                                <Image className="h-10 w-10 rounded-full" src={hero.imageUrl} alt="" width={40} height={40} />
                                             </div>
                                             <div className="ml-4">
                                                 <div className="text-sm font-medium text-gray-900">{hero.name}</div>

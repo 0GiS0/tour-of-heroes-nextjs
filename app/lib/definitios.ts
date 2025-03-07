@@ -2,7 +2,7 @@ export type Hero = {
     id: number;
     name: string;
     description: string;
-    imageUrl: string; // Cambiado de imageurl a imageUrl para coincidir con la BD
+    imageUrl: string;
     createdAt: string;
     updatedAt: string;
 }

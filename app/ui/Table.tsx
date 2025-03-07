@@ -2,6 +2,7 @@ import { getHeroes } from "../lib/data";
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import Link from "next/link";
 
 export default async function HeroesTable() {
     const heroes = await getHeroes();
@@ -50,7 +51,12 @@ export default async function HeroesTable() {
                                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                         <div className="flex justify-end gap-2">
                                             <button className="rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-100">
-                                                <FontAwesomeIcon icon={faEdit} />
+                                                <Link
+                                                    href={`/heroes/${hero.id}/edit`}>
+                                                    <FontAwesomeIcon icon={faEdit} />
+                                                </Link>
+
+
                                             </button>
                                             <button className="rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-100">
                                                 <FontAwesomeIcon icon={faTrash} />

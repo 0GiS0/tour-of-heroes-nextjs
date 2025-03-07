@@ -1,21 +1,21 @@
 const heroes = [
     {
         id: 1,
-        name: 'Batman',
+        name: 'Shadow Knight',
         description: 'A superhero with no superpowers, but a lot of gadgets.',
-        imageUrl: 'https://example.com/batman.jpg'
+        imageUrl: '/heroes/shadow-knight.jpeg'
     },
     {
         id: 2,
-        name: 'Superman',
+        name: 'Sky Guardian',
         description: 'A superhero with super strength and the ability to fly.',
-        imageUrl: 'https://example.com/superman.jpg'
+        imageUrl: '/heroes/sky-guardian.jpeg'
     },
     {
         id: 3,
-        name: 'Wonder Woman',
+        name: 'Valor Queen',
         description: 'An Amazonian warrior with superhuman strength and agility.',
-        imageUrl: 'https://example.com/wonderwoman.jpg'
+        imageUrl: '/heroes/valor-queen.jpeg'
     }];
 
 export { heroes };

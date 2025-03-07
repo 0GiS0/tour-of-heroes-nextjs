@@ -3,6 +3,10 @@ import { Hero } from './definitios';
 
 const sql = postgres(process.env.POSTGRES_URL!);
 
+/// <summary>
+/// Fetches all heroes from the database.
+/// </summary>
+/// <returns>Array of heroes</returns>
 async function getHeroes() {
     const heroes = await sql`SELECT * FROM heroes`;
 
@@ -18,6 +22,11 @@ async function getHeroes() {
     })) as Hero[];
 }
 
+/// <summary>
+/// Fetches a hero by ID from the database.
+/// </summary>
+/// <param name="id">The ID of the hero</param>
+/// <returns>The hero object or null if not found</returns>
 async function getHero(id: number) {
     const hero = await sql`SELECT * FROM heroes WHERE id = ${id}`;
     if (!hero[0]) return null;

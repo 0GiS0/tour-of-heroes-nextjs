@@ -2,8 +2,9 @@
 
 import { Hero } from "../lib/definitios";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { updateHero, HeroFormState } from "../lib/actions";
+import { useActionState } from "react";
 
 export default function EditHeroForm({ hero }: { hero: Hero }) {
     console.log("Editing hero: ", hero);
@@ -13,13 +14,17 @@ export default function EditHeroForm({ hero }: { hero: Hero }) {
         router.back();
     };
 
+    const initialState: HeroFormState = { message: null, errors: {} };
+    const updateHeroWithId = updateHero.bind(null, hero.id);
+    const [state, formAction] = useActionState(updateHeroWithId, initialState);
+
     return (
-        <form className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-            {/* Hero image centered at the top */}
+        <form action={formAction} className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+
             <div className="flex justify-center mb-6">
                 <div className="w-40 h-40 relative rounded-full overflow-hidden border-4 border-blue-500 shadow-lg">
                     {hero.imageUrl && (
-                        <Image 
+                        <Image
                             src={hero.imageUrl}
                             alt={`${hero.name} image`}
                             fill
@@ -29,22 +34,40 @@ export default function EditHeroForm({ hero }: { hero: Hero }) {
                     )}
                 </div>
             </div>
-            
+
+            {state?.message && (
+                <div className="mt-4 p-3 bg-green-100 text-green-800 rounded-md">
+                    {state.message}
+                </div>
+            )}
+
+            {Object.entries(state?.errors || {}).length > 0 && (
+                <div className="mt-4 p-3 bg-red-100 text-red-800 rounded-md">
+                    <ul className="list-disc pl-4">
+                        {Object.entries(state.errors).map(([key, errors]) => (
+                            errors?.map((error, i) => (
+                                <li key={`${key}-${i}`}>{error}</li>
+                            ))
+                        ))}
+                    </ul>
+                </div>
+            )}
+
             <div className="mb-4">
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                <input 
-                    type="text" 
-                    id="name" 
-                    name="name" 
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
                     defaultValue={hero.name}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
             </div>
             <div className="mb-4">
                 <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea 
-                    id="description" 
-                    name="description" 
+                <textarea
+                    id="description"
+                    name="description"
                     defaultValue={hero.description}
                     rows={4}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -52,17 +75,17 @@ export default function EditHeroForm({ hero }: { hero: Hero }) {
             </div>
             <div className="mb-6">
                 <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
-                <input 
-                    type="text" 
-                    id="imageUrl" 
-                    name="imageUrl" 
+                <input
+                    type="text"
+                    id="imageUrl"
+                    name="imageUrl"
                     defaultValue={hero.imageUrl}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
             </div>
-            
+
             <div className="flex space-x-4">
-                <button 
+                <button
                     type="button"
                     onClick={handleGoBack}
                     className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 flex items-center justify-center"
@@ -72,7 +95,7 @@ export default function EditHeroForm({ hero }: { hero: Hero }) {
                     </svg>
                     Back
                 </button>
-                <button 
+                <button
                     type="submit"
                     className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 flex items-center justify-center"
                 >

@@ -14,6 +14,64 @@ export interface HeroFormState {
 
 const sql = postgres(process.env.POSTGRES_URL!);
 
+export async function createHero(prevState: HeroFormState, formData: FormData): Promise<HeroFormState> {
+    const name = formData.get("name") as string;
+    const description = formData.get("description") as string;
+    const imageUrl = formData.get("imageUrl") as string;
+    
+    // Validación simple
+    const errors: { [key: string]: string[] } = {};
+    
+    if (!name || name.trim() === '') {
+        errors.name = ['Name is required'];
+    }
+    
+    if (!description || description.trim() === '') {
+        errors.description = ['Description is required'];
+    }
+    
+    if (!imageUrl || imageUrl.trim() === '') {
+        errors.imageUrl = ['Image URL is required'];
+    }
+    
+    if (Object.keys(errors).length > 0) {
+        return {
+            message: null,
+            errors
+        };
+    }
+    
+    console.log("Creating hero: ", name);
+    
+    try {
+        await sql`
+          INSERT INTO heroes (name, description, imageurl)
+          VALUES (${name}, ${description}, ${imageUrl})
+        `;
+        
+        console.log("Hero created successfully");
+        revalidatePath(`/heroes`);
+        redirect(`/heroes`);
+    } catch (error) {
+        console.error("Error creating hero: ", error);
+        return {
+            message: null,
+            errors: {
+                general: ['Failed to create hero. Please try again.']
+            }
+        };
+    }
+    
+    // Este código nunca se ejecutará debido al redirect, pero TypeScript espera un retorno
+    return {
+        message: 'Hero created successfully',
+        errors: {}
+    };
+}
+
+/// <summary>
+/// Updates a hero in the database.
+/// </summary>
 export async function updateHero(id: number, prevState: HeroFormState, formData: FormData): Promise<HeroFormState> {
     'use server';
     const name = formData.get("name") as string;
@@ -42,3 +100,4 @@ export async function updateHero(id: number, prevState: HeroFormState, formData:
     revalidatePath(`/heroes`);
     redirect(`/heroes`);
 }
+

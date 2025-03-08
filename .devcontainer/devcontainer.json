@@ -10,7 +10,9 @@
 		"vscode": {
 			"extensions": [
 				"ckolkman.vscode-postgres",
-				"burkeholland.simple-react-snippets"
+				"burkeholland.simple-react-snippets",
+				"GitHub.copilot",
+				"GitHub.copilot-chat"
 			]
 		}
 	}	

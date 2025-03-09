@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Link from "next/link";
+import { DeleteHero } from "./heroes/delete-hero";
 
 export default async function HeroesTable() {
     const heroes = await getHeroes();
@@ -60,9 +61,7 @@ export default async function HeroesTable() {
 
 
                                             </button>
-                                            <button className="rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-100">
-                                                <FontAwesomeIcon icon={faTrash} />
-                                            </button>
+                                            <DeleteHero id={hero.id} />                                            
                                         </div>
                                     </td>
                                 </tr>

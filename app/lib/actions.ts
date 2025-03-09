@@ -4,7 +4,6 @@ import { revalidatePath } from "next/cache";
 import { redirect } from 'next/navigation';
 import postgres from "postgres";
 
-// Redefinir el tipo FormState para evitar conflictos con el State de postgres
 export interface HeroFormState {
     message: string | null;
     errors: {
@@ -101,3 +100,24 @@ export async function updateHero(id: number, prevState: HeroFormState, formData:
     redirect(`/heroes`);
 }
 
+export async function deleteHero(id: number) {    
+
+    console.log("Deleting hero with id: ", id);
+
+    try {
+        await sql`
+          DELETE FROM heroes
+          WHERE id = ${id}
+      `;
+
+        console.log("Hero deleted successfully");
+
+    } catch (error) {
+
+        console.error("Error deleting hero: ", error);
+
+    }
+
+    revalidatePath(`/heroes`);
+    redirect(`/heroes`);
+}

@@ -1,6 +1,5 @@
 'use client';
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createHero, HeroFormState } from "../lib/actions";
 import { useActionState } from "react";

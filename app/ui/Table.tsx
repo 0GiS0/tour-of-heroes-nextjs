@@ -1,7 +1,7 @@
 import { getHeroes } from "../lib/data";
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import Link from "next/link";
 import { DeleteHero } from "./heroes/delete-hero";
 

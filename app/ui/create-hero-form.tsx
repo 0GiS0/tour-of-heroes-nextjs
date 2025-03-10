@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { createHero, HeroFormState } from "../lib/actions";
 import { useActionState } from "react";
+import Image from "next/image";
+import { useState, useEffect } from "react";
 
 export default function CreateHeroForm() {
     const router = useRouter();
@@ -14,9 +16,62 @@ export default function CreateHeroForm() {
     const initialState: HeroFormState = { message: null, errors: {} };
     const [state, formAction] = useActionState(createHero, initialState);
 
+    // Para la previsualización de la imagen
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+    // Efecto para manejar la redirección cuando el estado indica éxito
+    useEffect(() => {
+        if (state?.success) {
+            router.push('/heroes');
+        }
+    }, [state, router]);
+
+    // Función para manejar la vista previa cuando se selecciona una imagen
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setSelectedFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewImage(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    // Función personalizada para manejar la presentación del formulario
+    async function handleSubmit(formData: FormData) {
+        // Si hay un archivo seleccionado, lo agregamos al FormData
+        if (selectedFile) {
+            formData.append("heroImage", selectedFile);
+        }
+        
+        // Enviamos el formulario
+        await formAction(formData);
+    }
+
     return (
-        <form action={formAction} className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold text-center mb-6 text-blue-600">Create New Hero</h2>
+        <form action={handleSubmit} className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+            {/* Vista previa de la imagen */}
+            <div className="flex justify-center mb-6">
+                <div className="w-40 h-40 relative rounded-full overflow-hidden border-4 border-blue-500 shadow-lg bg-gray-200 flex items-center justify-center">
+                    {previewImage ? (
+                        <Image
+                            src={previewImage}
+                            alt="Hero preview"
+                            fill
+                            style={{ objectFit: 'cover' }}
+                            className="transition-transform hover:scale-110 duration-300"
+                            onError={() => setPreviewImage(null)}
+                        />
+                    ) : (
+                        <div className="text-gray-400 text-xs text-center p-4">
+                            Image preview will appear here
+                        </div>
+                    )}
+                </div>
+            </div>
 
             {state?.message && (
                 <div className="mt-4 p-3 bg-green-100 text-green-800 rounded-md">
@@ -61,17 +116,19 @@ export default function CreateHeroForm() {
             </div>
             
             <div className="mb-6">
-                <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+                <label htmlFor="heroImage" className="block text-sm font-medium text-gray-700 mb-1">Hero Image</label>
                 <input
-                    type="text"
-                    id="imageUrl"
-                    name="imageUrl"
-                    placeholder="https://example.com/hero-image.jpg"
+                    type="file"
+                    id="heroImage"
+                    name="heroImage"
+                    accept="image/*"
+                    onChange={handleImageChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     required
                 />
+                <p className="text-xs text-gray-500 mt-1">Upload an image for your hero (PNG, JPG, JPEG)</p>
             </div>
-
+            
             <div className="flex space-x-4">
                 <button
                     type="button"

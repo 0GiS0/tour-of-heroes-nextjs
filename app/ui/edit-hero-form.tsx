@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { updateHero, HeroFormState } from "../lib/actions";
 import { useActionState } from "react";
+import { useState } from "react";
 
 export default function EditHeroForm({ hero }: { hero: Hero }) {
     console.log("Editing hero: ", hero);
@@ -18,19 +19,57 @@ export default function EditHeroForm({ hero }: { hero: Hero }) {
     const updateHeroWithId = updateHero.bind(null, hero.id);
     const [state, formAction] = useActionState(updateHeroWithId, initialState);
 
+    // Para la previsualización de la imagen
+    const [previewImage, setPreviewImage] = useState<string | null>(hero.imageUrl);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [useExistingImage, setUseExistingImage] = useState(true);
+
+    // Función para manejar la vista previa cuando se selecciona una imagen
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setSelectedFile(file);
+            setUseExistingImage(false);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewImage(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    // Función personalizada para manejar la presentación del formulario
+    async function handleSubmit(formData: FormData) {
+        // Si hay un archivo seleccionado, lo agregamos al FormData
+        if (selectedFile) {
+            formData.append("heroImage", selectedFile);
+        }
+        
+        // Indicamos si se está usando la imagen existente
+        formData.append("useExistingImage", useExistingImage.toString());
+        
+        // Enviamos el formulario
+        await formAction(formData);
+    }
+
     return (
-        <form action={formAction} className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+        <form action={handleSubmit} className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
 
             <div className="flex justify-center mb-6">
-                <div className="w-40 h-40 relative rounded-full overflow-hidden border-4 border-blue-500 shadow-lg">
-                    {hero.imageUrl && (
+                <div className="w-40 h-40 relative rounded-full overflow-hidden border-4 border-blue-500 shadow-lg bg-gray-200 flex items-center justify-center">
+                    {previewImage ? (
                         <Image
-                            src={hero.imageUrl}
+                            src={previewImage}
                             alt={`${hero.name} image`}
                             fill
                             style={{ objectFit: 'cover' }}
                             className="transition-transform hover:scale-110 duration-300"
+                            onError={() => setPreviewImage(null)}
                         />
+                    ) : (
+                        <div className="text-gray-400 text-xs text-center p-4">
+                            No image available
+                        </div>
                     )}
                 </div>
             </div>
@@ -74,15 +113,25 @@ export default function EditHeroForm({ hero }: { hero: Hero }) {
                 ></textarea>
             </div>
             <div className="mb-6">
-                <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+                <label htmlFor="heroImage" className="block text-sm font-medium text-gray-700 mb-1">Hero Image</label>
                 <input
-                    type="text"
-                    id="imageUrl"
-                    name="imageUrl"
-                    defaultValue={hero.imageUrl}
+                    type="file"
+                    id="heroImage"
+                    name="heroImage"
+                    accept="image/*"
+                    onChange={handleImageChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
+                <p className="text-xs text-gray-500 mt-1">Upload a new image or keep the existing one</p>
             </div>
+            
+            {/* Campo oculto para enviar la URL de la imagen existente */}
+            <input
+                type="hidden"
+                id="imageUrl"
+                name="imageUrl"
+                value={hero.imageUrl}
+            />
 
             <div className="flex space-x-4">
                 <button

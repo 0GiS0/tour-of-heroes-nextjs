@@ -10,16 +10,17 @@ const sql = postgres(process.env.POSTGRES_URL!);
 async function getHeroes() {
     const heroes = await sql`SELECT * FROM heroes`;
 
-
-
-    return heroes.map(row => ({
-        id: row.id,
-        name: row.name,
-        description: row.description,
-        imageUrl: row.imageurl,
-        createdAt: row.inserted_at,
-        updatedAt: row.updated_at
+    if (!heroes) return null;
+    return heroes.map((hero: any) => ({
+        id: hero.id,
+        name: hero.name,
+        description: hero.description,
+        image_url: hero.image_url,
+        createdAt: hero.inserted_at,
+        updatedAt: hero.updated_at
     })) as Hero[];
+
+
 }
 
 /// <summary>
@@ -35,7 +36,7 @@ async function getHero(id: number) {
         id: hero[0].id,
         name: hero[0].name,
         description: hero[0].description,
-        imageUrl: hero[0].imageurl,
+        image_url: hero[0].image_url,
         createdAt: hero[0].inserted_at,
         updatedAt: hero[0].updated_at
     } as Hero;

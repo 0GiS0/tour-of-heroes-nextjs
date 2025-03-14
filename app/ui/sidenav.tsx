@@ -7,7 +7,8 @@ export default function SideNav() {
             <nav className="flex flex-col p-4 space-y-2">
                 <a href="#" className="p-2 hover:bg-gray-700 rounded">Dashboard</a>
                 <a href="#" className="p-2 hover:bg-gray-700 rounded">Heroes</a>
-                <a href="#" className="p-2 hover:bg-gray-700 rounded">Villains</a>                
+                <a href="#" className="p-2 hover:bg-gray-700 rounded">Villains</a>
+                <a href="/seed" className="p-2 hover:bg-gray-700 rounded">Reset Database</a>
             </nav>
         </div>
     );

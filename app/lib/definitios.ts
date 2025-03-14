@@ -2,7 +2,7 @@ export type Hero = {
     id: number;
     name: string;
     description: string;
-    imageUrl: string;
+    image_url: string;
     createdAt: string;
     updatedAt: string;
 }

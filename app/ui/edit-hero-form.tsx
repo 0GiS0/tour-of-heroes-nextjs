@@ -20,7 +20,7 @@ export default function EditHeroForm({ hero }: { hero: Hero }) {
     const [state, formAction] = useActionState(updateHeroWithId, initialState);
 
     // Para la previsualización de la imagen
-    const [previewImage, setPreviewImage] = useState<string | null>(hero.imageUrl);
+    const [previewImage, setPreviewImage] = useState<string | null>(hero.image_url);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [useExistingImage, setUseExistingImage] = useState(true);
 

@@ -11,8 +11,8 @@
 			"extensions": [
 				"ckolkman.vscode-postgres",
 				"burkeholland.simple-react-snippets",
-				"GitHub.copilot",
-				"GitHub.copilot-chat",
+				"GitHub.copilot@pre-release",
+				"GitHub.copilot-chat@pre-release",
 				"Phu1237.vs-browser"
 			]
 		}

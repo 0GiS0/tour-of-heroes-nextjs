@@ -1,4 +1,4 @@
-import Table from '@/app/ui/heroes/HeroesTable';
+import { VillainsTable } from '@/app/ui/villains/VillainsTable';
 import Link from 'next/link';
 
 export default function Page() {
@@ -17,7 +17,7 @@ export default function Page() {
                 </Link>
             </div>
 
-            <Table />
+            <VillainsTable />
         </div>
     );
 }

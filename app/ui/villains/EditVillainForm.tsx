@@ -1,30 +1,24 @@
-'use client';
 
-import { Hero } from "../../lib/definitios";
+// Duplicar y adaptar el componente para villanos
+'use client';
+import { Villain } from "../../lib/definitios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { updateHero, HeroFormState } from "../../lib/actions";
+import { updateVillain, VillainFormState } from "../../lib/actions";
 import { useActionState } from "react";
 import { useState } from "react";
-
-export default function EditHeroForm({ hero }: { hero: Hero }) {
-    console.log("Editing hero: ", hero);
+export default function EditVillainForm({ villain }: { villain: Villain }) {
+    console.log("Editing villain: ", villain);
     const router = useRouter();
-
     const handleGoBack = () => {
         router.back();
     };
-
-    const initialState: HeroFormState = { message: null, errors: {} };
-    const updateHeroWithId = updateHero.bind(null, hero.id);
-    const [state, formAction] = useActionState(updateHeroWithId, initialState);
-
-    // Para la previsualización de la imagen
-    const [previewImage, setPreviewImage] = useState<string | null>(hero.image_url);
+    const initialState: VillainFormState = { message: null, errors: {} };
+    const updateVillainWithId = updateVillain.bind(null, villain.id);
+    const [state, formAction] = useActionState(updateVillainWithId, initialState);
+    const [previewImage, setPreviewImage] = useState<string | null>(villain.image_url);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [useExistingImage, setUseExistingImage] = useState(true);
-
-    // Función para manejar la vista previa cuando se selecciona una imagen
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -37,30 +31,21 @@ export default function EditHeroForm({ hero }: { hero: Hero }) {
             reader.readAsDataURL(file);
         }
     };
-
-    // Función personalizada para manejar la presentación del formulario
     async function handleSubmit(formData: FormData) {
-        // Si hay un archivo seleccionado, lo agregamos al FormData
         if (selectedFile) {
-            formData.append("heroImage", selectedFile);
+            formData.append("villainImage", selectedFile);
         }
-        
-        // Indicamos si se está usando la imagen existente
         formData.append("useExistingImage", useExistingImage.toString());
-        
-        // Enviamos el formulario
         await formAction(formData);
     }
-
     return (
         <form action={handleSubmit} className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-
             <div className="flex justify-center mb-6">
                 <div className="w-40 h-40 relative rounded-full overflow-hidden border-4 border-blue-500 shadow-lg bg-gray-200 flex items-center justify-center">
                     {previewImage ? (
                         <Image
                             src={previewImage}
-                            alt={`${hero.name} image`}
+                            alt={`${villain.name} image`}
                             fill
                             style={{ objectFit: 'cover' }}
                             className="transition-transform hover:scale-110 duration-300"
@@ -73,13 +58,11 @@ export default function EditHeroForm({ hero }: { hero: Hero }) {
                     )}
                 </div>
             </div>
-
             {state?.message && (
                 <div className="mt-4 p-3 bg-green-100 text-green-800 rounded-md">
                     {state.message}
                 </div>
             )}
-
             {Object.entries(state?.errors || {}).length > 0 && (
                 <div className="mt-4 p-3 bg-red-100 text-red-800 rounded-md">
                     <ul className="list-disc pl-4">
@@ -91,14 +74,13 @@ export default function EditHeroForm({ hero }: { hero: Hero }) {
                     </ul>
                 </div>
             )}
-
             <div className="mb-4">
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                 <input
                     type="text"
                     id="name"
                     name="name"
-                    defaultValue={hero.name}
+                    defaultValue={villain.name}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
             </div>
@@ -107,32 +89,29 @@ export default function EditHeroForm({ hero }: { hero: Hero }) {
                 <textarea
                     id="description"
                     name="description"
-                    defaultValue={hero.description}
+                    defaultValue={villain.description}
                     rows={4}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 ></textarea>
             </div>
             <div className="mb-6">
-                <label htmlFor="heroImage" className="block text-sm font-medium text-gray-700 mb-1">Hero Image</label>
+                <label htmlFor="villainImage" className="block text-sm font-medium text-gray-700 mb-1">Villain Image</label>
                 <input
                     type="file"
-                    id="heroImage"
-                    name="heroImage"
+                    id="villainImage"
+                    name="villainImage"
                     accept="image/*"
                     onChange={handleImageChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <p className="text-xs text-gray-500 mt-1">Upload a new image or keep the existing one</p>
             </div>
-            
-            {/* Campo oculto para enviar la URL de la imagen existente */}
             <input
                 type="hidden"
                 id="imageUrl"
                 name="imageUrl"
-                value={hero.imageUrl}
+                value={villain.imageUrl}
             />
-
             <div className="flex space-x-4">
                 <button
                     type="button"

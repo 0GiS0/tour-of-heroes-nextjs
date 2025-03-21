@@ -42,4 +42,24 @@ async function getHero(id: number) {
     } as Hero;
 }
 
+export async function getVillains() {
+    try {
+        const villains = await sql`SELECT * FROM villains`;
+        return villains;
+    } catch (error) {
+        console.error("Error fetching villains: ", error);
+        return [];
+    }
+}
+
+export async function getVillain(id: number) {
+    try {
+        const [villain] = await sql`SELECT * FROM villains WHERE id = ${id}`;
+        return villain || null;
+    } catch (error) {
+        console.error("Error fetching villain: ", error);
+        return null;
+    }
+}
+
 export { getHeroes, getHero };

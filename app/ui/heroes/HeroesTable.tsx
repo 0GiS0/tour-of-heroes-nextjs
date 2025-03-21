@@ -1,9 +1,9 @@
-import { getHeroes } from "../lib/data";
+import { getHeroes } from "../../lib/data";
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import Link from "next/link";
-import { DeleteHero } from "./heroes/delete-hero";
+import { DeleteHero } from "./DeleteHero";
 
 export default async function HeroesTable() {
     const heroes = await getHeroes();

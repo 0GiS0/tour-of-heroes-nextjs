@@ -1,4 +1,4 @@
-import CreateHeroForm from "@/app/ui/create-hero-form";
+import CreateHeroForm from "@/app/ui/heroes/CreateHeroForm";
 
 export default function CreateHeroPage() {
   return (

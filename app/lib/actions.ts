@@ -207,3 +207,68 @@ export async function deleteHero(id: number) {
         return { success: false };
     }
 }
+
+export async function createVillain(prevState: HeroFormState, formData: FormData): Promise<HeroFormState> {
+    'use server';
+    const name = formData.get("name") as string;
+    const description = formData.get("description") as string;
+    let imageUrl = formData.get("imageUrl") as string;
+    const useExistingImage = formData.get("useExistingImage") === 'true';
+
+    const errors: { [key: string]: string[] } = {};
+
+    if (!name || name.trim() === '') {
+        errors.name = ['Name is required'];
+    }
+
+    if (!description || description.trim() === '') {
+        errors.description = ['Description is required'];
+    }
+
+    if (!useExistingImage) {
+        const villainImage = formData.get("villainImage") as File;
+
+        if (villainImage && villainImage.size > 0) {
+            try {
+                const timestamp = Date.now();
+                const fileName = `${name.toLowerCase().replace(/\s+/g, '-')}-${timestamp}${path.extname(villainImage.name)}`;
+                const publicDirPath = path.join(process.cwd(), 'public');
+                const villainsDirPath = path.join(publicDirPath, 'villains');
+                const filePath = path.join(villainsDirPath, fileName);
+
+                if (!fs.existsSync(villainsDirPath)) {
+                    fs.mkdirSync(villainsDirPath, { recursive: true });
+                }
+
+                const buffer = Buffer.from(await villainImage.arrayBuffer());
+                await writeFile(filePath, buffer);
+
+                imageUrl = `/villains/${fileName}`;
+            } catch (error) {
+                console.error("Error processing image:", error);
+                errors.villainImage = ['Failed to process the image. Please try again.'];
+            }
+        }
+    }
+
+    if (Object.keys(errors).length > 0) {
+        return {
+            message: null,
+            errors
+        };
+    }
+
+    try {
+        await sql`
+          INSERT INTO villains (name, description, imageurl)
+          VALUES (${name}, ${description}, ${imageUrl})
+        `;
+
+        console.log("Villain created successfully");
+    } catch (error) {
+        console.error("Error creating villain: ", error);
+    }
+
+    revalidatePath(`/villains`);
+    redirect('/villains');
+}

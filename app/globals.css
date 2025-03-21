@@ -5,11 +5,54 @@
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Tema claro para los héroes */
+.heroes-theme {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --accent-color: #3b82f6;
+  --border-color: #e2e8f0;
+  --card-bg: #ffffff;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.heroes-theme button {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.heroes-theme .card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+}
+
+/* Tema oscuro para los villanos */
+.villains-theme {
+  --background: #0f0f0f;
+  --foreground: #e0e0e0;
+  --accent-color: #dc2626;
+  --border-color: #27272a;
+  --card-bg: #18181b;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+  
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.villains-theme button {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.villains-theme .card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
 }
 
 @media (prefers-color-scheme: dark) {

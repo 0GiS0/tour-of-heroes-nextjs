@@ -288,3 +288,82 @@ export async function createVillain(prevState: HeroFormState, formData: FormData
     revalidatePath(`/villains`);
     redirect('/villains');
 }
+
+// Función para actualizar un villano (que faltaba)
+export async function updateVillain(id: number, prevState: HeroFormState, formData: FormData): Promise<HeroFormState> {
+    'use server';
+    const name = formData.get("name") as string;
+    const bio = formData.get("bio") as string;
+    let imageUrl = formData.get("imageUrl") as string;
+    const useExistingImage = formData.get("useExistingImage") === 'true';
+    
+    // Validación simple
+    const errors: { [key: string]: string[] } = {};
+    
+    if (!name || name.trim() === '') {
+        errors.name = ['Name is required'];
+    }
+    
+    if (!bio || bio.trim() === '') {
+        errors.bio = ['Bio is required'];
+    }
+    
+    // Procesar la imagen subida solo si no se está usando la existente
+    if (!useExistingImage) {
+        const villainImage = formData.get("villainImage") as File;
+        
+        if (villainImage && villainImage.size > 0) {
+            try {
+                // Asegurarse de que es una imagen
+                if (!villainImage.type.startsWith('image/')) {
+                    errors.villainImage = ['File must be an image'];
+                } else {
+                    // Generar un nombre único para la imagen basado en el nombre del villano y timestamp
+                    const timestamp = Date.now();
+                    const fileName = `${name.toLowerCase().replace(/\s+/g, '-')}-${timestamp}${path.extname(villainImage.name)}`;
+                    const publicDirPath = path.join(process.cwd(), 'public');
+                    const villainsDirPath = path.join(publicDirPath, 'villains');
+                    const filePath = path.join(villainsDirPath, fileName);
+                    
+                    // Asegurarnos de que el directorio existe
+                    if (!fs.existsSync(villainsDirPath)) {
+                        fs.mkdirSync(villainsDirPath, { recursive: true });
+                    }
+                    
+                    // Convertir la imagen a un buffer y guardarla en el sistema de archivos
+                    const buffer = Buffer.from(await villainImage.arrayBuffer());
+                    await writeFile(filePath, buffer);
+                    
+                    // La URL de la imagen será relativa para Next.js
+                    imageUrl = `/villains/${fileName}`;
+                }
+            } catch (error) {
+                console.error("Error processing image:", error);
+                errors.villainImage = ['Failed to process the image. Please try again.'];
+            }
+        }
+    }
+    
+    if (Object.keys(errors).length > 0) {
+        return {
+            message: null,
+            errors
+        };
+    }
+    console.log("Updating villain with id: ", id);
+    
+    try {
+        await sql`
+          UPDATE villains
+          SET name = ${name}, description = ${bio}, imageurl = ${imageUrl}
+          WHERE id = ${id}
+        `;
+        
+        console.log("Villain updated successfully");
+     
+    } catch (error) {
+        console.error("Error updating villain: ", error);     
+    }
+    revalidatePath(`/villains`);
+    redirect('/villains');
+}

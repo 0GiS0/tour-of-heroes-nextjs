@@ -13,12 +13,12 @@ export default async function HeroesTable() {
     return (
         <div className="mt-6 flow-root">
             <div className="inline-block min-w-full align-middle">
-                <div className="overflow-hidden rounded-lg shadow">
+                <div className="overflow-hidden rounded-lg shadow card">
                     <table className="min-w-full divide-y divide-gray-300">
-                        <thead className="bg-gray-50">
+                        <thead className="bg-blue-50">
                             <tr>
                                 <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                    <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                                    <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
                                 </th>
                                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Name</th>                                
                                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Bio</th>
@@ -30,9 +30,9 @@ export default async function HeroesTable() {
                         </thead>
                         <tbody className="divide-y divide-gray-200 bg-white">
                             {heroes?.map((hero) => (
-                                <tr key={hero.id} className="hover:bg-gray-50">
+                                <tr key={hero.id} className="hover:bg-blue-50">
                                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                        <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                                        <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900">
                                         <div className="flex items-center">
@@ -52,13 +52,11 @@ export default async function HeroesTable() {
                                     </td>
                                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                         <div className="flex justify-end gap-2">
-                                            <button className="rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-100">
+                                            <button className="rounded-md bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-100">
                                                 <Link
                                                     href={`/heroes/${hero.id}/edit`}>
                                                     <FontAwesomeIcon icon={faEdit} />
                                                 </Link>
-
-
                                             </button>
                                             <DeleteHero id={hero.id} />                                            
                                         </div>

@@ -53,10 +53,10 @@ export default function EditHeroForm({ hero }: { hero: Hero }) {
     }
 
     return (
-        <form action={handleSubmit} className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+        <form action={handleSubmit} className="max-w-md mx-auto p-6 card rounded-lg">
 
             <div className="flex justify-center mb-6">
-                <div className="w-40 h-40 relative rounded-full overflow-hidden border-4 border-blue-500 shadow-lg bg-gray-200 flex items-center justify-center">
+                <div className="w-40 h-40 relative rounded-full overflow-hidden border-4 border-blue-500 shadow-lg bg-blue-50 flex items-center justify-center">
                     {previewImage ? (
                         <Image
                             src={previewImage}
@@ -130,7 +130,7 @@ export default function EditHeroForm({ hero }: { hero: Hero }) {
                 type="hidden"
                 id="imageUrl"
                 name="imageUrl"
-                value={hero.imageUrl}
+                value={hero.image_url}
             />
 
             <div className="flex space-x-4">

@@ -46,6 +46,7 @@ async function createTables() {
         alias VARCHAR(50),
         power VARCHAR(100),
         origin VARCHAR(100),
+        bio TEXT,
         affiliation_id UUID,
         image_url VARCHAR(255),
         FOREIGN KEY (affiliation_id) REFERENCES Affiliations(id)
@@ -57,6 +58,7 @@ async function createTables() {
         alias VARCHAR(50),
         power VARCHAR(100),
         origin VARCHAR(100),
+        bio TEXT,
         affiliation_id UUID,
         image_url VARCHAR(255),
         FOREIGN KEY (affiliation_id) REFERENCES Affiliations(id)
@@ -125,7 +127,12 @@ async function seedData() {
 
     // Seeding heroes from placeholder data
     for (const hero of heroes) {
-        await sql`INSERT INTO Heroes (id, name, alias, power, origin, affiliation_id, image_url) VALUES (${hero.id}, ${hero.name}, null, ${hero.description}, null, null, ${hero.imageUrl}) ON CONFLICT DO NOTHING`;
+        const id = hero.id || sql`gen_random_uuid()`;
+        const name = hero.name || 'Unknown Hero';
+        const bio = hero.bio || hero.description || 'No bio available';
+        const imageUrl = hero.imageUrl || '/public/global/not-found.jpeg';
+
+        await sql`INSERT INTO Heroes (id, name, alias, power, origin, affiliation_id, image_url, bio) VALUES (${id}, ${name}, null, null, null, null, ${imageUrl}, ${bio}) ON CONFLICT DO NOTHING`;
     }
 
     // Add more seeding logic for other tables as needed

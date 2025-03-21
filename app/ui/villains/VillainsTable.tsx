@@ -4,7 +4,6 @@ import Link from "next/link";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { getVillains } from "@/app/lib/data";
 
-// Duplicar y adaptar el componente para villanos
 export async function VillainsTable() {
     const villains = await getVillains();
     console.log("Villains: ", villains);
@@ -19,7 +18,7 @@ export async function VillainsTable() {
                                     <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
                                 </th>
                                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Name</th>
-                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Description</th>
+                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Bio</th>
                                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
                                 <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                                     <span className="sr-only">Actions</span>
@@ -43,7 +42,7 @@ export async function VillainsTable() {
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-3 py-4 text-sm text-gray-500">{villain.description}</td>
+                                    <td className="px-3 py-4 text-sm text-gray-500">{villain.bio}</td>
                                     <td className="px-3 py-4 text-sm text-gray-500">
                                         <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
                                             Online
@@ -57,7 +56,7 @@ export async function VillainsTable() {
                                                     <FontAwesomeIcon icon={faEdit} />
                                                 </Link>
                                             </button>
-                                            <DeleteVillain id={villain.id} />                                            
+                                            <DeleteVillain id={villain.id} />
                                         </div>
                                     </td>
                                 </tr>

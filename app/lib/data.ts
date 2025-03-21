@@ -14,7 +14,7 @@ async function getHeroes() {
     return heroes.map((hero: any) => ({
         id: hero.id,
         name: hero.name,
-        description: hero.description,
+        bio: hero.bio,
         image_url: hero.image_url,
         createdAt: hero.inserted_at,
         updatedAt: hero.updated_at
@@ -35,7 +35,7 @@ async function getHero(id: number) {
     return {
         id: hero[0].id,
         name: hero[0].name,
-        description: hero[0].description,
+        bio: hero[0].bio,
         image_url: hero[0].image_url,
         createdAt: hero[0].inserted_at,
         updatedAt: hero[0].updated_at

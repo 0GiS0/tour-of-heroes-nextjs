@@ -1,0 +1,21 @@
+{
+    "mcp": {
+        "inputs": [],
+        "servers": {
+            "spotify-mcp": {
+                "command": "uv",
+                "args": [
+                    "--directory",
+                    "/Users/gis/Desktop/Dev/spotify-mcp",
+                    "run",
+                    "spotify-mcp"
+                ],
+                "env": {
+                    "SPOTIFY_CLIENT_ID": "<YOUR_SPOTIFY_CLIENT_ID>",
+                    "SPOTIFY_CLIENT_SECRET": "<YOUR_SPOTIFY_CLIENT_SECRET>",
+                    "SPOTIFY_REDIRECT_URI": "http://localhost:8888"
+                }
+            }
+        }
+    }
+}

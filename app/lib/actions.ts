@@ -30,7 +30,7 @@ async function resetIdSequence() {
 
 export async function createHero(prevState: HeroFormState, formData: FormData): Promise<HeroFormState> {
     const name = formData.get("name") as string;
-    const description = formData.get("description") as string;
+    const bio = formData.get("bio") as string;
     let imageUrl = "";
     
     // Validación simple
@@ -40,8 +40,8 @@ export async function createHero(prevState: HeroFormState, formData: FormData): 
         errors.name = ['Name is required'];
     }
     
-    if (!description || description.trim() === '') {
-        errors.description = ['Description is required'];
+    if (!bio || bio.trim() === '') {
+        errors.bio = ['Bio is required'];
     }
     
     // Procesar la imagen subida
@@ -96,7 +96,7 @@ export async function createHero(prevState: HeroFormState, formData: FormData): 
         // Insertar el nuevo héroe
         await sql`
           INSERT INTO heroes (name, description, imageurl)
-          VALUES (${name}, ${description}, ${imageUrl})
+          VALUES (${name}, ${bio}, ${imageUrl})
         `;
         
         console.log("Hero created successfully");       
@@ -115,7 +115,7 @@ export async function createHero(prevState: HeroFormState, formData: FormData): 
 export async function updateHero(id: number, prevState: HeroFormState, formData: FormData): Promise<HeroFormState> {
     'use server';
     const name = formData.get("name") as string;
-    const description = formData.get("description") as string;
+    const bio = formData.get("bio") as string;
     let imageUrl = formData.get("imageUrl") as string;
     const useExistingImage = formData.get("useExistingImage") === 'true';
     
@@ -126,8 +126,8 @@ export async function updateHero(id: number, prevState: HeroFormState, formData:
         errors.name = ['Name is required'];
     }
     
-    if (!description || description.trim() === '') {
-        errors.description = ['Description is required'];
+    if (!bio || bio.trim() === '') {
+        errors.bio = ['Bio is required'];
     }
     
     // Procesar la imagen subida solo si no se está usando la existente
@@ -178,7 +178,7 @@ export async function updateHero(id: number, prevState: HeroFormState, formData:
     try {
         await sql`
           UPDATE heroes
-          SET name = ${name}, description = ${description}, imageurl = ${imageUrl}
+          SET name = ${name}, description = ${bio}, imageurl = ${imageUrl}
           WHERE id = ${id}
         `;
         
@@ -227,7 +227,7 @@ export async function deleteVillain(id: number) {
 export async function createVillain(prevState: HeroFormState, formData: FormData): Promise<HeroFormState> {
     'use server';
     const name = formData.get("name") as string;
-    const description = formData.get("description") as string;
+    const bio = formData.get("bio") as string;
     let imageUrl = formData.get("imageUrl") as string;
     const useExistingImage = formData.get("useExistingImage") === 'true';
 
@@ -237,8 +237,8 @@ export async function createVillain(prevState: HeroFormState, formData: FormData
         errors.name = ['Name is required'];
     }
 
-    if (!description || description.trim() === '') {
-        errors.description = ['Description is required'];
+    if (!bio || bio.trim() === '') {
+        errors.bio = ['Bio is required'];
     }
 
     if (!useExistingImage) {
@@ -277,7 +277,7 @@ export async function createVillain(prevState: HeroFormState, formData: FormData
     try {
         await sql`
           INSERT INTO villains (name, description, imageurl)
-          VALUES (${name}, ${description}, ${imageUrl})
+          VALUES (${name}, ${bio}, ${imageUrl})
         `;
 
         console.log("Villain created successfully");

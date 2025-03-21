@@ -1,5 +1,7 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { deleteVillain } from '@/app/lib/actions';
+
 
 export function DeleteVillain({ id }: { id: number }) {
     const deleteVillainWithId = deleteVillain.bind(null, id);

@@ -208,6 +208,22 @@ export async function deleteHero(id: number) {
     }
 }
 
+export async function deleteVillain(id: number) {
+    console.log("Deleting villain with id: ", id);
+    try {
+        await sql`
+            DELETE FROM villains
+            WHERE id = ${id}
+        `;
+        console.log("Villain deleted successfully");
+        revalidatePath(`/villains`);
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting villain: ", error);
+        return { success: false };
+    }
+}
+
 export async function createVillain(prevState: HeroFormState, formData: FormData): Promise<HeroFormState> {
     'use server';
     const name = formData.get("name") as string;

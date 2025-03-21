@@ -15,6 +15,7 @@ async function getHeroes() {
         id: hero.id,
         name: hero.name,
         bio: hero.bio,
+        status: hero.status,
         image_url: hero.image_url,
         createdAt: hero.inserted_at,
         updatedAt: hero.updated_at
@@ -45,6 +46,8 @@ async function getHero(id: number) {
 export async function getVillains() {
     try {
         const villains = await sql`SELECT * FROM villains`;
+        console.table(villains);
+
         return villains;
     } catch (error) {
         console.error("Error fetching villains: ", error);

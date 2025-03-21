@@ -1,6 +1,6 @@
 import postgres from "postgres";
 
-import { heroes } from "../lib/placeholder-data";
+import { heroes, villains } from "../lib/placeholder-data";
 
 const sql = postgres(process.env.POSTGRES_URL!);
 
@@ -49,6 +49,7 @@ async function createTables() {
         bio TEXT,
         affiliation_id UUID,
         image_url VARCHAR(255),
+        status VARCHAR(50),
         FOREIGN KEY (affiliation_id) REFERENCES Affiliations(id)
     )`;
 
@@ -61,6 +62,7 @@ async function createTables() {
         bio TEXT,
         affiliation_id UUID,
         image_url VARCHAR(255),
+        status VARCHAR(50),
         FOREIGN KEY (affiliation_id) REFERENCES Affiliations(id)
     )`;
 
@@ -131,8 +133,20 @@ async function seedData() {
         const name = hero.name || 'Unknown Hero';
         const bio = hero.bio || hero.description || 'No bio available';
         const imageUrl = hero.imageUrl || '/public/global/not-found.jpeg';
+        const status = hero.status || 'Offline';
 
-        await sql`INSERT INTO Heroes (id, name, alias, power, origin, affiliation_id, image_url, bio) VALUES (${id}, ${name}, null, null, null, null, ${imageUrl}, ${bio}) ON CONFLICT DO NOTHING`;
+        await sql`INSERT INTO Heroes (id, name, alias, power, origin, affiliation_id, image_url, bio, status) VALUES (${id}, ${name}, null, null, null, null, ${imageUrl}, ${bio}, ${status}) ON CONFLICT DO NOTHING`;
+    }
+
+    // Seeding villains from placeholder data
+    for (const villain of villains) {
+        const id = villain.id || sql`gen_random_uuid()`;
+        const name = villain.name || 'Unknown Villain';
+        const bio = villain.bio || villain.description || 'No bio available';
+        const imageUrl = villain.imageUrl || '/public/global/not-found.jpeg';
+        const status = villain.status || 'Offline';
+
+        await sql`INSERT INTO Villains (id, name, alias, power, origin, affiliation_id, image_url, bio, status) VALUES (${id}, ${name}, null, null, null, null, ${imageUrl}, ${bio}, ${status}) ON CONFLICT DO NOTHING`;
     }
 
     // Add more seeding logic for other tables as needed

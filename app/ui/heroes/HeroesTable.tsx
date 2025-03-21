@@ -46,8 +46,8 @@ export default async function HeroesTable() {
                                     </td>                                    
                                     <td className="px-6 py-4 text-sm text-gray-500">{hero.bio}</td>
                                     <td className="px-3 py-4 text-sm text-gray-500">
-                                        <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
-                                            Online
+                                        <span className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${hero.status === 'Online' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                                            {hero.status}
                                         </span>
                                     </td>
                                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">

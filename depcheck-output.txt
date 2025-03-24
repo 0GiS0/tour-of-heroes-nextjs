@@ -1,0 +1,9 @@
+Unused dependencies
+* @tailwindcss/forms
+Unused devDependencies
+* @tailwindcss/postcss
+* @types/react-dom
+* eslint
+* eslint-config-next
+* tailwindcss
+* typescript

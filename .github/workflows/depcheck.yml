@@ -1,9 +1,16 @@
-name: Depcheck Unused Dependencies
+name: ✅📦 Depcheck Unused Dependencies
 
 on:
+  push:
+    branches: [ai-tour, main]
   schedule:
     - cron: '0 0 * * 0' # Runs every Sunday at midnight
-  workflow_dispatch: # Allows manual triggering of the workflow  
+  workflow_dispatch: # Allows manual triggering of the workflow
+
+
+permissions:
+  contents: read # Allows the workflow to read the repository contents
+  pull-requests: write # Allows the workflow to create pull requests
 
 jobs:
   depcheck:

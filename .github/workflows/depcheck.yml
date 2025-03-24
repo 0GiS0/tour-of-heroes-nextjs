@@ -39,8 +39,8 @@ jobs:
       if: steps.parse-deps.outputs.unused_deps != ''
       run: |
         # Config git client
-        git config user.name "depcheck[bot]"
-        git config user.email "depcheck@returngis.net"        
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
       
         for dep in $(echo ${{ steps.parse-deps.outputs.unused_deps }}); do
           git checkout -b "remove-$dep"

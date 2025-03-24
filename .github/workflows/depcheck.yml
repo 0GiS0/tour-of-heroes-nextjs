@@ -5,7 +5,7 @@ on:
     branches: [feat/ai-tour, main]
   schedule:
     - cron: '0 0 * * 0' # Runs every Sunday at midnight
-  workflow_dispatch: # Allows manual triggering of the workflow   
+  workflow_dispatch: # Allows manual triggering of the workflow
 
 
 permissions:
@@ -31,5 +31,28 @@ jobs:
 
       - name: Run depcheck
         run: |
-          #npx depcheck -y > depcheck-output.txt
-          npx depcheck -y
+          npx depcheck > depcheck-output.txt
+
+      - name: Check for unused dependencies
+        continue-on-error: true
+        id: check-unused
+        run: |
+          if grep -q 'Unused dependencies' depcheck-output.txt; then
+            echo "::set-output name=unused::true"
+          else
+            echo "::set-output name=unused::false"
+          fi
+
+      - name: Create Pull Request to remove unused dependencies
+        if: steps.check-unused.outputs.unused == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: 'chore: remove unused dependencies'
+          branch: remove-unused-dependencies
+          title: 'Remove unused dependencies'
+          body: |
+            The following dependencies were identified as unused by depcheck and have been removed:
+            ```
+            $(grep 'Unused dependencies' depcheck-output.txt | sed 's/Unused dependencies://')
+            ```
+          labels: 'dependencies, cleanup'

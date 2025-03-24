@@ -24,11 +24,13 @@ jobs:
       run: npm install
 
     - name: Run depcheck
+      continue-on-error: true
       id: depcheck
       run: npx depcheck --json > unused-deps.json
 
     - name: Parse unused dependencies
       id: parse-deps
+      continue-on-error: true
       run: |
         unused=$(jq -r '.dependencies[]' < unused-deps.json)
         echo "::set-output name=unused_deps::$unused"

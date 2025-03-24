@@ -68,6 +68,8 @@ jobs:
 
           if [ -z "$pr_exists" ]; then
             git checkout -b "$branch_name"
+            git pull origin main
+            git merge --strategy-option theirs main
             npm uninstall $dep
             git add package.json package-lock.json
             git commit -m "Remove unused dependency: $dep"

@@ -1,0 +1,59 @@
+name: ✅📦 Depcheck Unused Dependencies
+
+on:
+  push:
+    branches: [feat/ai-tour, main]
+  schedule:
+    - cron: '0 0 * * 0' # Runs every Sunday at midnight
+  workflow_dispatch: # Allows manual triggering of the workflow
+
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  depcheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Run depcheck
+        continue-on-error: true
+        run: |
+          npx depcheck -y > depcheck-output.txt
+
+      - name: Check for unused dependencies
+        continue-on-error: true
+        id: check-unused
+        run: |
+          if grep -q 'Unused dependencies' depcheck-output.txt; then
+            echo "::set-output name=unused::true"
+          else
+            echo "::set-output name=unused::false"
+          fi
+
+      - name: Create Pull Request to remove unused dependencies
+        if: steps.check-unused.outputs.unused == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: 'chore: remove unused dependencies'
+          branch: remove-unused-dependencies
+          title: 'Remove unused dependencies'
+          body: |
+            The following dependencies were identified as unused by depcheck and have been removed:
+            ```
+            $(grep 'Unused dependencies' depcheck-output.txt | sed 's/Unused dependencies://')
+            ```
+          labels: 'dependencies, cleanup'

@@ -73,6 +73,8 @@ jobs:
             git add package.json package-lock.json
             git commit -m "Remove unused dependency: $dep"
             git push origin "$branch_name"
+            gh label create --name "unused" --color "ff0000" || true
+            gh label create --name "dependencies" --color "ff0000" || true
             gh pr create --title "Remove unused dependency: $dep" --body "This PR removes the unused dependency: $dep" --label dependencies --label unused
           else
             echo "PR already exists for $dep, skipping."

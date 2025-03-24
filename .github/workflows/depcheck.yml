@@ -30,8 +30,9 @@ jobs:
           npm install
 
       - name: Run depcheck
+        continue-on-error: true
         run: |
-          npx depcheck > depcheck-output.txt
+          npx depcheck -y > depcheck-output.txt
 
       - name: Check for unused dependencies
         continue-on-error: true

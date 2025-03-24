@@ -47,6 +47,9 @@ jobs:
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
         git config pull.rebase true
+        git config --global merge.ours.driver true
+        echo "*.json merge=ours" >> .git/info/attributes
+
       
         for dep in $(echo ${{ steps.parse-deps.outputs.unused_deps }}); do
           git checkout -b "remove-$dep"

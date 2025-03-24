@@ -51,11 +51,19 @@ jobs:
         echo "*.json merge=ours" >> .git/info/attributes
 
         for dep in $(echo ${{ steps.parse-deps.outputs.unused_deps }}); do
+
+
+          echo "Processing dependency: $dep"          
+
           branch_name="remove-$dep"
+
+          echo "Branch name: $branch_name"
 
           gh pr list --label unused --search "is:open $branch_name" --json number -q '.[].number'
 
           pr_exists=$(gh pr list --label unused --search "is:open $branch_name" --json number -q '.[].number')
+
+          echo "PR exists: $pr_exists"
 
           if [ -z "$pr_exists" ]; then
             git checkout -b "$branch_name"

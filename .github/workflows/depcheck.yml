@@ -1,4 +1,4 @@
-name: Depcheck
+name: 🔎📦 Check for unused dependencies
 
 on:
   push:
@@ -52,7 +52,7 @@ jobs:
           git add package.json package-lock.json
           git commit -m "Remove unused dependency: $dep"
           git push origin "remove-$dep"
-          gh pr create --title "Remove unused dependency: $dep" --body "This PR removes the unused dependency: $dep"
+          gh pr create --title "Remove unused dependency: $dep" --body "This PR removes the unused dependency: $dep" --label dependecies --label unused
         done
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

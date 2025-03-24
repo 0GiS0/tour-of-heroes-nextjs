@@ -46,16 +46,20 @@ jobs:
         # Config git client
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
+        git config pull.rebase true
+        git config --global merge.ours.driver true
+        echo "*.json merge=ours" >> .git/info/attributes
 
         for dep in $(echo ${{ steps.parse-deps.outputs.unused_deps }}); do
           branch_name="remove-$dep"
-          pr_exists=$(gh pr list --label unused --search "$branch_name" --json number -q '.[].number')
 
-          echo "$pr_exists"
+          gh pr list --label unused --search "is:open $branch_name" --json number -q '.[].number'
 
-          # Check if the PR already exists
+          pr_exists=$(gh pr list --label unused --search "is:open $branch_name" --json number -q '.[].number')
+
           if [ -z "$pr_exists" ]; then
             git checkout -b "$branch_name"
+            git pull origin "$branch_name" || true
             npm uninstall $dep
             git add package.json package-lock.json
             git commit -m "Remove unused dependency: $dep"

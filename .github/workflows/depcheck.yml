@@ -5,7 +5,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 0 * * 0' # Ejecuta semanalmente
+    - cron: '0 0 * * 0'
 
 jobs:
   depcheck:
@@ -38,6 +38,10 @@ jobs:
     - name: Create branches and PRs for unused dependencies
       if: steps.parse-deps.outputs.unused_deps != ''
       run: |
+        # Config git client
+        git config user.name "depcheck[bot]"
+        git config user.name "depcheck@returngis.net"        
+      
         for dep in $(echo ${{ steps.parse-deps.outputs.unused_deps }}); do
           git checkout -b "remove-$dep"
           npm uninstall $dep

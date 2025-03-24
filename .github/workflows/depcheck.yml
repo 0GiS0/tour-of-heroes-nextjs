@@ -31,8 +31,7 @@ jobs:
     - name: Run depcheck
       continue-on-error: true
       id: depcheck
-      run: |
-        npx depcheck -y
+      run: |        
         npx depcheck -y --json > unused-deps.json
 
     - name: Parse unused dependencies

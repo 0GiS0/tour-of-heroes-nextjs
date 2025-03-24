@@ -38,7 +38,17 @@ jobs:
       continue-on-error: true
       run: |
         unused=$(jq -r '.dependencies[]' < unused-deps.json)
-        echo "::set-output name=unused_deps::$unused"
+        echo "name=unused_deps=$unused" >> $GITHUB_OUTPUT
+
+    - name: Add GitHub Action Summary
+      if: steps.parse-deps.outputs.unused_deps != ''
+      run: |
+        echo "## Unused Dependencies" >> $GITHUB_STEP_SUMMARY
+        echo "The following dependencies are unused:" >> $GITHUB_STEP_SUMMARY
+        for dep in $(echo ${{ steps.parse-deps.outputs.unused_deps }}); do
+          echo "- $dep" >> $GITHUB_STEP_SUMMARY
+        done
+        
 
     - name: Create branches and PRs for unused dependencies
       if: steps.parse-deps.outputs.unused_deps != ''

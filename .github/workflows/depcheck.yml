@@ -68,7 +68,7 @@ jobs:
 
           if [ -z "$pr_exists" ]; then
             git checkout -b "$branch_name"
-            git pull origin main
+            git pull origin "$branch_name" || true
             git merge --strategy-option theirs main
             npm uninstall $dep
             git add package.json package-lock.json

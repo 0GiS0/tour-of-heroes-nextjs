@@ -51,9 +51,11 @@ jobs:
           branch_name="remove-$dep"
           pr_exists=$(gh pr list --label unused --search "$branch_name" --json number -q '.[].number')
 
+          echo "$pr_exists"
+
+          # Check if the PR already exists
           if [ -z "$pr_exists" ]; then
             git checkout -b "$branch_name"
-            git pull origin "$branch_name" || true
             npm uninstall $dep
             git add package.json package-lock.json
             git commit -m "Remove unused dependency: $dep"

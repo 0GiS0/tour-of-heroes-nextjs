@@ -61,7 +61,7 @@ jobs:
 
           gh pr list --label unused --search "is:open $branch_name" --json number -q '.[].number'
 
-          pr_exists=$(gh pr list --label unused --search "is:open $branch_name" --json number -q '.[].number')
+          pr_exists=$(gh pr list --label unused --search "is:pr is:open head:$branch_name" --json number -q '.[].number')
 
           echo "PR exists: $pr_exists"
 

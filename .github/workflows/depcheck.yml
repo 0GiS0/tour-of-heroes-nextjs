@@ -49,7 +49,7 @@ jobs:
       
         for dep in $(echo ${{ steps.parse-deps.outputs.unused_deps }}); do
           git checkout -b "remove-$dep"
-          git pull
+          git pull origin "remove-$dep"
           npm uninstall $dep
           git add package.json package-lock.json
           git commit -m "Remove unused dependency: $dep"

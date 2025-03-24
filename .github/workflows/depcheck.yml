@@ -31,7 +31,7 @@ jobs:
 
       - name: Run depcheck
         run: |
-          npx depcheck > depcheck-output.txt
+          npx depcheck -y > depcheck-output.txt
 
       - name: Check for unused dependencies
         id: check-unused

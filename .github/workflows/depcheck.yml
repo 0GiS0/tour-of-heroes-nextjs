@@ -1,55 +1,48 @@
-name: ✅📦 Depcheck Unused Dependencies
+name: Depcheck
 
 on:
   push:
-    branches: [feat/ai-tour, main]
+    branches:
+      - main
   schedule:
-    - cron: '0 0 * * 0' # Runs every Sunday at midnight
-  workflow_dispatch: # Allows manual triggering of the workflow
-
-
-permissions:
-  contents: write
-  pull-requests: write
+    - cron: '0 0 * * 0' # Ejecuta semanalmente
 
 jobs:
   depcheck:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22'
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
 
-      - name: Install dependencies
-        run: |
-          npm install
+    - name: Install dependencies
+      run: npm install
 
-      - name: Run depcheck
-        continue-on-error: true
-        run: |
-          npx depcheck -y > depcheck-output.txt
+    - name: Run depcheck
+      id: depcheck
+      run: npx depcheck --json > unused-deps.json
 
-      - name: Check for unused dependencies
-        continue-on-error: true
-        id: check-unused
-        run: |
-          if grep -q 'Unused dependencies' depcheck-output.txt; then
-            echo "::set-output name=unused::true"
-          else
-            echo "::set-output name=unused::false"
-          fi
+    - name: Parse unused dependencies
+      id: parse-deps
+      run: |
+        unused=$(jq -r '.dependencies[]' < unused-deps.json)
+        echo "::set-output name=unused_deps::$unused"
 
-      - name: Create Pull Request to remove unused dependencies
-        if: steps.check-unused.outputs.unused == 'true'
-        uses: peter-evans/create-pull-request@v7
-        with:
-          commit-message: 'chore: remove unused dependencies'
-          branch: remove-unused-dependencies
-          title: 'Remove unused dependencies'
-          body-path: depcheck-output.txt
-          labels: 'dependencies, cleanup'
+    - name: Create branches and PRs for unused dependencies
+      if: steps.parse-deps.outputs.unused_deps != ''
+      run: |
+        for dep in $(echo ${{ steps.parse-deps.outputs.unused_deps }}); do
+          git checkout -b "remove-$dep"
+          npm uninstall $dep
+          git add package.json package-lock.json
+          git commit -m "Remove unused dependency: $dep"
+          git push origin "remove-$dep"
+          gh pr create --title "Remove unused dependency: $dep" --body "This PR removes the unused dependency: $dep"
+        done
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

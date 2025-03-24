@@ -46,6 +46,7 @@ jobs:
         # Config git client
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
+        git config pull.rebase true
       
         for dep in $(echo ${{ steps.parse-deps.outputs.unused_deps }}); do
           git checkout -b "remove-$dep"

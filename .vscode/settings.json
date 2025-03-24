@@ -6,13 +6,13 @@
                 "command": "uv",
                 "args": [
                     "--directory",
-                    "/Users/gis/Desktop/Dev/spotify-mcp",
+                    "/workspaces/tour-of-heroes-nextjs/spotify-mcp",
                     "run",
                     "spotify-mcp"
                 ],
                 "env": {
-                    "SPOTIFY_CLIENT_ID": "<YOUR_SPOTIFY_CLIENT_ID>",
-                    "SPOTIFY_CLIENT_SECRET": "<YOUR_SPOTIFY_CLIENT_SECRET>",
+                    "SPOTIFY_CLIENT_ID": "8200ad220c964ed6b9ab46ffa4fc85e0",
+                    "SPOTIFY_CLIENT_SECRET": "490b93f2b7a34de9bb1dd1e25f9719a1",
                     "SPOTIFY_REDIRECT_URI": "http://localhost:8888"
                 }
             }

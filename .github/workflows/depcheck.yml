@@ -34,26 +34,15 @@ jobs:
       run: |        
         npx depcheck -y --json > unused-deps.json
 
-    - name: Parse unused dependencies
-      id: parse-deps
-      continue-on-error: true
-      run: |
-        cat unused-deps.json
-        unused=$(jq -r '.dependencies[]' < unused-deps.json)
-        echo "unused_deps=$unused" >> $GITHUB_OUTPUT
-
-    - name: Add GitHub Action Summary
-      if: steps.parse-deps.outputs.unused_deps != ''
+    - name: Add GitHub Action Summary     
       run: |
         echo "## Unused Dependencies" >> $GITHUB_STEP_SUMMARY
         echo "The following dependencies are unused:" >> $GITHUB_STEP_SUMMARY
-        for dep in $(echo ${{ steps.parse-deps.outputs.unused_deps }}); do
+        for dep in $(jq -r '.dependencies[]' < unused-deps.json); do
           echo "- $dep" >> $GITHUB_STEP_SUMMARY
-        done
-        
+        done        
 
     - name: Create branches and PRs for unused dependencies
-      if: steps.parse-deps.outputs.unused_deps != ''
       run: |
         # Config git client
         git config user.name "GitHub Actions Bot"
@@ -62,7 +51,7 @@ jobs:
         git config --global merge.ours.driver true
         echo "*.json merge=ours" >> .git/info/attributes
 
-        for dep in $(echo ${{ steps.parse-deps.outputs.unused_deps }}); do
+        for dep in $(jq -r '.dependencies[]' < unused-deps.json); do
 
 
           echo "Processing dependency: $dep"          

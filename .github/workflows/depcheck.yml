@@ -40,7 +40,7 @@ jobs:
       run: |
         # Config git client
         git config user.name "depcheck[bot]"
-        git config user.name "depcheck@returngis.net"        
+        git config user.email "depcheck@returngis.net"        
       
         for dep in $(echo ${{ steps.parse-deps.outputs.unused_deps }}); do
           git checkout -b "remove-$dep"

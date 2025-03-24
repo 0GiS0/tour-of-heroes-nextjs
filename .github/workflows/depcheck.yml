@@ -31,14 +31,16 @@ jobs:
     - name: Run depcheck
       continue-on-error: true
       id: depcheck
-      run: npx depcheck -y --json > unused-deps.json
+      run: |
+        npx depcheck -y
+        npx depcheck -y --json > unused-deps.json
 
     - name: Parse unused dependencies
       id: parse-deps
       continue-on-error: true
       run: |
         unused=$(jq -r '.dependencies[]' < unused-deps.json)
-        echo "name=unused_deps=$unused" >> $GITHUB_OUTPUT
+        echo "unused_deps=$unused" >> $GITHUB_OUTPUT
 
     - name: Add GitHub Action Summary
       if: steps.parse-deps.outputs.unused_deps != ''

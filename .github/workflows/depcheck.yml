@@ -9,8 +9,8 @@ on:
 
 
 permissions:
-  contents: read # Allows the workflow to read the repository contents
-  pull-requests: write # Allows the workflow to create pull requests
+  contents: write
+  pull-requests: write
 
 jobs:
   depcheck:
@@ -46,7 +46,7 @@ jobs:
 
       - name: Create Pull Request to remove unused dependencies
         if: steps.check-unused.outputs.unused == 'true'
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
           commit-message: 'chore: remove unused dependencies'
           branch: remove-unused-dependencies

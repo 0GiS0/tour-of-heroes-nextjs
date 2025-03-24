@@ -67,9 +67,7 @@ jobs:
           echo "PR exists: $pr_exists"
 
           if [ -z "$pr_exists" ]; then
-            git checkout -b "$branch_name"
-            git pull origin "$branch_name" || true
-            git merge --strategy-option theirs main
+            git checkout -b "$branch_name"           
             npm uninstall $dep
             git add package.json package-lock.json
             git commit -m "Remove unused dependency: $dep"
@@ -83,3 +81,11 @@ jobs:
         done
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: If failed delete the branches
+      if: failure()
+      run: |
+        for dep in $(jq -r '.dependencies[]' < unused-deps.json); do
+          branch_name="remove-$dep"
+          echo "Deleting branch: $branch_name"
+          git push origin --delete "$branch_name" || true
+        done

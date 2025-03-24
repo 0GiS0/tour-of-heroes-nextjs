@@ -51,9 +51,5 @@ jobs:
           commit-message: 'chore: remove unused dependencies'
           branch: remove-unused-dependencies
           title: 'Remove unused dependencies'
-          body: |
-            The following dependencies were identified as unused by depcheck and have been removed:
-            ```
-            $(grep 'Unused dependencies' depcheck-output.txt | sed 's/Unused dependencies://')
-            ```
+          body-path: depcheck-output.txt
           labels: 'dependencies, cleanup'

@@ -18,12 +18,12 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
-        node-version: '16'
+        node-version: '22'
 
     - name: Install dependencies
       run: npm install
@@ -31,7 +31,7 @@ jobs:
     - name: Run depcheck
       continue-on-error: true
       id: depcheck
-      run: npx depcheck --json > unused-deps.json
+      run: npx depcheck -y --json > unused-deps.json
 
     - name: Parse unused dependencies
       id: parse-deps
@@ -46,19 +46,22 @@ jobs:
         # Config git client
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
-        git config pull.rebase true
-        git config --global merge.ours.driver true
-        echo "*.json merge=ours" >> .git/info/attributes
 
-      
         for dep in $(echo ${{ steps.parse-deps.outputs.unused_deps }}); do
-          git checkout -b "remove-$dep"
-          git pull origin "remove-$dep"
-          npm uninstall $dep
-          git add package.json package-lock.json
-          git commit -m "Remove unused dependency: $dep"
-          git push origin "remove-$dep"
-          gh pr create --title "Remove unused dependency: $dep" --body "This PR removes the unused dependency: $dep" --label dependecies --label unused
+          branch_name="remove-$dep"
+          pr_exists=$(gh pr list --label unused --search "$branch_name" --json number -q '.[].number')
+
+          if [ -z "$pr_exists" ]; then
+            git checkout -b "$branch_name"
+            git pull origin "$branch_name" || true
+            npm uninstall $dep
+            git add package.json package-lock.json
+            git commit -m "Remove unused dependency: $dep"
+            git push origin "$branch_name"
+            gh pr create --title "Remove unused dependency: $dep" --body "This PR removes the unused dependency: $dep" --label dependencies --label unused
+          else
+            echo "PR already exists for $dep, skipping."
+          fi
         done
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

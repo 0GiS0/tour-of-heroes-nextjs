@@ -19,7 +19,15 @@ const heroes = [
         bio: 'An Amazonian warrior with superhuman strength and agility.',
         imageUrl: '/heroes/valor-queen.jpeg',
         status: 'Offline'
-    }];
+    },
+    {
+        id: '77777777-7777-7777-7777-777777777777',
+        name: 'Scripta',
+        description: 'A time-traveling coder who can manipulate reality by rewriting the scripts of existence.',
+        imageUrl: '/heroes/scripta.jpeg',
+        status: 'Online'
+    }
+];
 
 
 const villains = [

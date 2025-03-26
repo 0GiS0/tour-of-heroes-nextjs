@@ -6,7 +6,7 @@
                 "command": "uv",
                 "args": [
                     "--directory",
-                    "/workspaces/tour-of-heroes-nextjs/spotify-mcp",
+                    "D:\\repos\\tour-of-heroes-nextjs\\spotify-mcp",
                     "run",
                     "spotify-mcp"
                 ],

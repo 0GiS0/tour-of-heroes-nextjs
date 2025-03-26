@@ -34,11 +34,6 @@ async function createTables() {
         END IF;
     END $$;`;
 
-    await sql`CREATE TABLE IF NOT EXISTS Affiliations (
-        id UUID PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        type affiliation_type NOT NULL
-    )`;
 
     await sql`CREATE TABLE IF NOT EXISTS Heroes (
         id UUID PRIMARY KEY,
@@ -47,10 +42,8 @@ async function createTables() {
         power VARCHAR(100),
         origin VARCHAR(100),
         bio TEXT,
-        affiliation_id UUID,
         image_url VARCHAR(255),
-        status VARCHAR(50),
-        FOREIGN KEY (affiliation_id) REFERENCES Affiliations(id)
+        status VARCHAR(50)
     )`;
 
     await sql`CREATE TABLE IF NOT EXISTS Villains (
@@ -60,73 +53,15 @@ async function createTables() {
         power VARCHAR(100),
         origin VARCHAR(100),
         bio TEXT,
-        affiliation_id UUID,
         image_url VARCHAR(255),
-        status VARCHAR(50),
-        FOREIGN KEY (affiliation_id) REFERENCES Affiliations(id)
+        status VARCHAR(50)
     )`;
 
-    await sql`CREATE TABLE IF NOT EXISTS Powers (
-        id UUID PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        description TEXT
-    )`;
-
-    await sql`CREATE TABLE IF NOT EXISTS HeroPowers (
-        hero_id UUID,
-        power_id UUID,
-        PRIMARY KEY (hero_id, power_id),
-        FOREIGN KEY (hero_id) REFERENCES Heroes(id),
-        FOREIGN KEY (power_id) REFERENCES Powers(id)
-    )`;
-
-    await sql`CREATE TABLE IF NOT EXISTS VillainPowers (
-        villain_id UUID,
-        power_id UUID,
-        PRIMARY KEY (villain_id, power_id),
-        FOREIGN KEY (villain_id) REFERENCES Villains(id),
-        FOREIGN KEY (power_id) REFERENCES Powers(id)
-    )`;
-
-    await sql`CREATE TABLE IF NOT EXISTS Battles (
-        id UUID PRIMARY KEY,
-        hero_id UUID,
-        villain_id UUID,
-        location VARCHAR(100),
-        date DATE,
-        outcome VARCHAR(50),
-        FOREIGN KEY (hero_id) REFERENCES Heroes(id),
-        FOREIGN KEY (villain_id) REFERENCES Villains(id)
-    )`;
-
-    await sql`CREATE TABLE IF NOT EXISTS Cities (
-        id UUID PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        country VARCHAR(100) NOT NULL
-    )`;
-
-    await sql`CREATE TABLE IF NOT EXISTS HeroCities (
-        hero_id UUID,
-        city_id UUID,
-        PRIMARY KEY (hero_id, city_id),
-        FOREIGN KEY (hero_id) REFERENCES Heroes(id),
-        FOREIGN KEY (city_id) REFERENCES Cities(id)
-    )`;
-
-    await sql`CREATE TABLE IF NOT EXISTS VillainCities (
-        villain_id UUID,
-        city_id UUID,
-        PRIMARY KEY (villain_id, city_id),
-        FOREIGN KEY (villain_id) REFERENCES Villains(id),
-        FOREIGN KEY (city_id) REFERENCES Cities(id)
-    )`;
+   
 }
 
 async function seedData() {
-    // Example seeding logic for Affiliations
-    await sql`INSERT INTO Affiliations (id, name, type) VALUES (gen_random_uuid(), 'Justice League', 'Hero') ON CONFLICT DO NOTHING`;
-    await sql`INSERT INTO Affiliations (id, name, type) VALUES (gen_random_uuid(), 'Legion of Doom', 'Villain') ON CONFLICT DO NOTHING`;
-
+ 
     // Seeding heroes from placeholder data
     for (const hero of heroes) {
         const id = hero.id || sql`gen_random_uuid()`;
@@ -135,7 +70,7 @@ async function seedData() {
         const imageUrl = hero.imageUrl || '/public/global/not-found.jpeg';
         const status = hero.status || 'Offline';
 
-        await sql`INSERT INTO Heroes (id, name, alias, power, origin, affiliation_id, image_url, bio, status) VALUES (${id}, ${name}, null, null, null, null, ${imageUrl}, ${bio}, ${status}) ON CONFLICT DO NOTHING`;
+        await sql`INSERT INTO Heroes (id, name, alias, power, origin, image_url, bio, status) VALUES (${id}, ${name}, null, null, null, ${imageUrl}, ${bio}, ${status}) ON CONFLICT DO NOTHING`;
     }
 
     // Seeding villains from placeholder data
@@ -146,7 +81,7 @@ async function seedData() {
         const imageUrl = villain.imageUrl || '/public/global/not-found.jpeg';
         const status = villain.status || 'Offline';
 
-        await sql`INSERT INTO Villains (id, name, alias, power, origin, affiliation_id, image_url, bio, status) VALUES (${id}, ${name}, null, null, null, null, ${imageUrl}, ${bio}, ${status}) ON CONFLICT DO NOTHING`;
+        await sql`INSERT INTO Villains (id, name, alias, power, origin, image_url, bio, status) VALUES (${id}, ${name}, null, null, null, ${imageUrl}, ${bio}, ${status}) ON CONFLICT DO NOTHING`;
     }
 
     // Add more seeding logic for other tables as needed

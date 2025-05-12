@@ -1,6 +1,24 @@
 {
     "mcp": {
-        "inputs": [],
+        "inputs": [
+            {
+                "type": "promptString",
+                "id": "spotify_client_id",
+                "description": "Spotify Client ID",
+                "password": true
+            },
+            {
+                "type": "promptString",
+                "id": "spotify_client_secret",
+                "description": "Spotify Client Secret",
+                "password": true
+            },
+            {
+                "type": "promptString",
+                "id": "spotify_redirect_uri",
+                "description": "Spotify Redirect URI"
+            }
+        ],
         "servers": {
             "spotify-mcp": {
                 "command": "uv",
@@ -11,9 +29,9 @@
                     "spotify-mcp"
                 ],
                 "env": {
-                    "SPOTIFY_CLIENT_ID": "8200ad220c964ed6b9ab46ffa4fc85e0",
-                    "SPOTIFY_CLIENT_SECRET": "490b93f2b7a34de9bb1dd1e25f9719a1",
-                    "SPOTIFY_REDIRECT_URI": "http://localhost:8888"
+                    "SPOTIFY_CLIENT_ID": "${input:spotify_client_id}",
+                    "SPOTIFY_CLIENT_SECRET": "${input:spotify_client_secret}",
+                    "SPOTIFY_REDIRECT_URI": "${input:spotify_redirect_uri}"
                 }
             }
         }
